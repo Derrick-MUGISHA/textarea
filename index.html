@@ -22,7 +22,6 @@
 
   article {
     outline: none;
-    margin: 0 auto;
     padding: 18px max(18px, calc(50vw - 400px));
     width: 100%;
     min-height: 100vh;
@@ -32,6 +31,7 @@
     text-rendering: optimizeLegibility;
     white-space: pre-wrap;
     text-wrap-style: pretty;
+    overflow-wrap: break-word;
   }
 </style>
 <article contenteditable="plaintext-only" spellcheck></article>
@@ -43,12 +43,12 @@
 
   async function load() {
     try {
-      if (location.hash === '') {
+      if (location.hash !== '') await set(location.hash)
+      else {
         await set(localStorage.getItem('hash') ?? '')
         if (article.textContent) history.replaceState({}, '', await get())
-        return
+        article.focus()
       }
-      await set(location.hash)
     } catch (e) {
       article.textContent = ''
       article.removeAttribute('style')
